@@ -1,0 +1,272 @@
+import { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { db } from '../lib/firebase';
+import { collection, query, where, getDocs, doc, updateDoc, getDoc, serverTimestamp } from 'firebase/firestore';
+import { useAuth } from '../contexts/AuthContext';
+import { motion, AnimatePresence } from 'motion/react';
+import { 
+  Users, 
+  ChevronLeft, 
+  MessageSquare, 
+  CheckCircle2, 
+  Clock, 
+  AlertCircle,
+  TrendingUp,
+  Search,
+  ChevronRight,
+  Loader2
+} from 'lucide-react';
+import { cn } from '../lib/utils';
+import { Submission, Assessment } from '../types';
+
+export default function GraderView() {
+  const { courseId } = useParams();
+  const { user, profile } = useAuth();
+  const navigate = useNavigate();
+
+  const [submissions, setSubmissions] = useState<Submission[]>([]);
+  const [assessments, setAssessments] = useState<Record<string, Assessment>>({});
+  const [loading, setLoading] = useState(true);
+  const [selectedSubmission, setSelectedSubmission] = useState<Submission | null>(null);
+  const [grade, setGrade] = useState('');
+  const [feedback, setFeedback] = useState('');
+  const [isGrading, setIsGrading] = useState(false);
+
+  useEffect(() => {
+    if (!courseId || !user) return;
+
+    const fetchData = async () => {
+      try {
+        if (!user) return;
+        // Fetch all assessments for this course to link labels
+        const assessmentsSnap = await getDocs(collection(db, `courses/${courseId}/assessments`));
+        const assessmentsMap: Record<string, Assessment> = {};
+        assessmentsSnap.docs.forEach(doc => {
+          assessmentsMap[doc.id] = { id: doc.id, ...doc.data() } as Assessment;
+        });
+        setAssessments(assessmentsMap);
+
+        // Fetch submissions - including lecturerId check to satisfy rules
+        const q = query(
+          collection(db, 'submissions'), 
+          where('courseId', '==', courseId),
+          where('lecturerId', '==', user.uid)
+        );
+        const subSnap = await getDocs(q);
+        const subs = subSnap.docs.map(doc => ({ id: doc.id, ...doc.data() } as Submission));
+        setSubmissions(subs);
+      } catch (err) {
+        console.error("Fetch submissions error:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [courseId, user]);
+
+  const handleGradeSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedSubmission) return;
+
+    setIsGrading(true);
+    try {
+      await updateDoc(doc(db, 'submissions', selectedSubmission.id), {
+        score: parseInt(grade),
+        feedback: feedback,
+        gradedAt: serverTimestamp(),
+      });
+
+      setSubmissions(submissions.map(s => s.id === selectedSubmission.id 
+        ? { ...s, score: parseInt(grade), feedback } 
+        : s
+      ));
+      setSelectedSubmission(null);
+      setGrade('');
+      setFeedback('');
+    } catch (err) {
+      console.error("Grading error:", err);
+    } finally {
+      setIsGrading(false);
+    }
+  };
+
+  if (loading) return <div className="flex items-center justify-center py-20"><Loader2 className="w-10 h-10 animate-spin text-gray-300" /></div>;
+
+  return (
+    <div className="space-y-8">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-4">
+          <button 
+            onClick={() => navigate(`/course/${courseId}`)}
+            className="p-3 bg-white border border-gray-100 rounded-2xl text-gray-400 hover:text-[#004A99] transition-all"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+          <div>
+            <h1 className="text-3xl font-black text-gray-900 tracking-tight">Review Submissions</h1>
+            <p className="text-gray-500 text-sm">Grade and provide feedback for student assessments</p>
+          </div>
+        </div>
+
+        <div className="flex items-center space-x-2 bg-blue-50 px-4 py-2 rounded-2xl border border-blue-100">
+          <TrendingUp className="w-4 h-4 text-[#004A99]" />
+          <span className="text-sm font-bold text-[#004A99]">{submissions.filter(s => s.score !== undefined).length} / {submissions.length} Graded</span>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Submissions List */}
+        <div className="lg:col-span-1 space-y-4">
+          <div className="relative group">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <input 
+              type="text" 
+              placeholder="Filter by student name..." 
+              className="w-full bg-white border border-gray-100 rounded-2xl pl-12 pr-4 py-3 text-xs focus:ring-2 focus:ring-blue-500/10 focus:border-[#004A99] transition-all"
+            />
+          </div>
+
+          <div className="space-y-2">
+            {submissions.map((sub) => (
+              <button
+                key={sub.id}
+                onClick={() => setSelectedSubmission(sub)}
+                className={cn(
+                  "w-full p-6 bg-white rounded-3xl border text-left transition-all group",
+                  selectedSubmission?.id === sub.id 
+                    ? "border-[#004A99] shadow-md ring-4 ring-blue-50/50" 
+                    : "border-gray-50 hover:border-gray-200"
+                )}
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-[#004A99]">
+                    {assessments[sub.artifactId]?.title || 'Unknown Task'}
+                  </span>
+                  {sub.score !== undefined ? (
+                    <CheckCircle2 className="w-4 h-4 text-green-500" />
+                  ) : (
+                    <AlertCircle className="w-4 h-4 text-orange-400" />
+                  )}
+                </div>
+                <h4 className="font-bold text-gray-900 group-hover:text-[#004A99] transition-colors">{sub.userName}</h4>
+                <div className="flex items-center justify-between mt-4">
+                   <div className="flex items-center space-x-2 text-[10px] font-bold text-gray-400">
+                    <Clock className="w-3 h-3" />
+                    <span>{sub.submittedAt?.toDate ? sub.submittedAt.toDate().toLocaleDateString() : 'Just now'}</span>
+                  </div>
+                  {sub.score !== undefined && (
+                    <span className="text-xs font-black text-green-600 bg-green-50 px-2 py-1 rounded-lg">
+                      {sub.score}%
+                    </span>
+                  )}
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Grading Panel */}
+        <div className="lg:col-span-2">
+          {selectedSubmission ? (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-white rounded-[2.5rem] border border-gray-100 shadow-sm overflow-hidden"
+            >
+              <div className="p-8 border-b border-gray-50 bg-gray-50/30">
+                <h2 className="text-2xl font-black text-gray-900 mb-2">Reviewing {selectedSubmission.userName}</h2>
+                <div className="flex items-center space-x-4">
+                   <div className={cn(
+                    "px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest",
+                    selectedSubmission.type === 'quiz' ? "bg-purple-100 text-purple-600" : "bg-orange-100 text-orange-600"
+                  )}>
+                    {selectedSubmission.type}
+                  </div>
+                  <span className="text-xs font-bold text-gray-400">Task: {assessments[selectedSubmission.artifactId]?.title}</span>
+                </div>
+              </div>
+
+              <div className="p-8 space-y-8">
+                <div>
+                  <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest mb-4">Student Response</h3>
+                  <div className="bg-gray-50 p-8 rounded-[2rem] border border-gray-100 min-h-[200px]">
+                    {selectedSubmission.type === 'assignment' ? (
+                      <p className="whitespace-pre-wrap text-gray-700 leading-relaxed">{selectedSubmission.content.text}</p>
+                    ) : (
+                      <div className="space-y-6">
+                        {assessments[selectedSubmission.artifactId]?.questions?.map((q, idx) => (
+                          <div key={idx} className="bg-white p-6 rounded-2xl border border-gray-100">
+                            <p className="text-xs font-bold text-gray-400 mb-2">Question {idx + 1}</p>
+                            <p className="font-bold text-gray-900 mb-4">{q.text}</p>
+                            <div className="flex items-center justify-between">
+                              <p className="text-sm">
+                                Student Answer: <span className="font-bold text-[#004A99]">{selectedSubmission.content[q.id!] || '--'}</span>
+                              </p>
+                              {q.correctAnswer && (
+                                <p className="text-xs text-green-600 font-bold bg-green-50 px-3 py-1 rounded-full">
+                                  Correct: {q.correctAnswer}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <form onSubmit={handleGradeSubmit} className="grid grid-cols-1 md:grid-cols-4 gap-6 items-end">
+                  <div className="md:col-span-1">
+                    <label className="text-[10px] uppercase font-black text-gray-400 tracking-widest block mb-2 px-2">Score (0-100)</label>
+                    <input
+                      required
+                      type="number"
+                      min="0"
+                      max="100"
+                      value={grade}
+                      onChange={e => setGrade(e.target.value)}
+                      placeholder="85"
+                      className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-5 py-4 font-black text-xl text-[#004A99] focus:ring-2 focus:ring-blue-500/10"
+                    />
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="text-[10px] uppercase font-black text-gray-400 tracking-widest block mb-2 px-2">Lecturer Feedback</label>
+                    <input
+                      required
+                      type="text"
+                      value={feedback}
+                      onChange={e => setFeedback(e.target.value)}
+                      placeholder="Great work! Focus on..."
+                      className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-5 py-4 text-sm focus:ring-2 focus:ring-blue-500/10 px-5"
+                    />
+                  </div>
+                  <div className="md:col-span-1">
+                    <button
+                      type="submit"
+                      disabled={isGrading}
+                      className="w-full bg-[#004A99] text-white py-4 rounded-2xl font-bold hover:bg-blue-800 transition-all shadow-lg flex items-center justify-center space-x-2"
+                    >
+                      {isGrading ? <Loader2 className="w-5 h-5 animate-spin" /> : <MessageSquare className="w-4 h-4" />}
+                      <span>Save Grade</span>
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </motion.div>
+          ) : (
+            <div className="h-full bg-white rounded-[2.5rem] border border-dashed border-gray-200 flex flex-col items-center justify-center p-12 text-center space-y-6">
+              <div className="w-20 h-20 bg-gray-50 rounded-[1.5rem] flex items-center justify-center">
+                <Users className="w-10 h-10 text-gray-200" />
+              </div>
+              <div className="space-y-2">
+                <h3 className="text-xl font-bold text-gray-900">Select a submission to grade</h3>
+                <p className="text-gray-400 text-sm max-w-xs">Click on any student submission from the left panel to begin reviewing their work.</p>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
