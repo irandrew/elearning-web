@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UR Learn — University of Rwanda E-Learning Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,300&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark">UR</div>
+    <div class="logo-text">
+      <span class="logo-primary">UR Learn</span>
+      <span class="logo-sub">University of Rwanda</span>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a href="#" class="nav-item active" data-page="dashboard" onclick="navigate('dashboard')">
+      <svg viewBox="0 0 20 20"><path d="M3 3h6v6H3zm8 0h6v6h-6zM3 11h6v6H3zm8 0h6v6h-6z" fill="currentColor" opacity=".8"/></svg>
+      Dashboard
+    </a>
+    <a href="#" class="nav-item" data-page="courses" onclick="navigate('courses')">
+      <svg viewBox="0 0 20 20"><path d="M2 4a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H4a2 2 0 01-2-2V4zm2 0v12h12V4H4zm2 3h8v1H6V7zm0 3h8v1H6v-1zm0 3h5v1H6v-1z" fill="currentColor"/></svg>
+      My Courses
+    </a>
+    <a href="#" class="nav-item" data-page="lectures" onclick="navigate('lectures')">
+      <svg viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16A8 8 0 0010 2zm-1 4.5l5 3-5 3V6.5z" fill="currentColor"/></svg>
+      Lectures
+    </a>
+    <a href="#" class="nav-item" data-page="assignments" onclick="navigate('assignments')">
+      <svg viewBox="0 0 20 20"><path d="M5 3a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2V5a2 2 0 00-2-2H5zm0 2h10v10H5V5zm5 2a3 3 0 100 6 3 3 0 000-6z" fill="currentColor"/></svg>
+      Assignments
+    </a>
+    <a href="#" class="nav-item" data-page="grades" onclick="navigate('grades')">
+      <svg viewBox="0 0 20 20"><path d="M10 2l2.4 4.8 5.3.8-3.85 3.75.91 5.3L10 14.1l-4.76 2.55.91-5.3L2.3 7.6l5.3-.8L10 2z" fill="currentColor"/></svg>
+      Grades
+    </a>
+    <a href="#" class="nav-item" data-page="calendar" onclick="navigate('calendar')">
+      <svg viewBox="0 0 20 20"><path d="M6 2v1H4a2 2 0 00-2 2v11a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2h-2V2h-2v1H8V2H6zm8 3v1H6V5H4v2h12V5h-2zm2 4H4v7h12V9z" fill="currentColor"/></svg>
+      Calendar
+    </a>
+    <a href="#" class="nav-item" data-page="forum" onclick="navigate('forum')">
+      <svg viewBox="0 0 20 20"><path d="M2 4a2 2 0 012-2h12a2 2 0 012 2v8a2 2 0 01-2 2H6l-4 4V4z" fill="currentColor"/></svg>
+      Discussion Forum
+    </a>
+    <a href="#" class="nav-item" data-page="resources" onclick="navigate('resources')">
+      <svg viewBox="0 0 20 20"><path d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h5v-2H4V5h7v3h2V5h1v3h2V5a2 2 0 00-2-2H4zm9 8v2h-2v2h2v2h2v-2h2v-2h-2v-2h-2z" fill="currentColor"/></svg>
+      Resources
+    </a>
+  </nav>
+
+  <div class="sidebar-profile">
+    <div class="profile-avatar">MK</div>
+    <div class="profile-info">
+      <span class="profile-name">Marie Kayitesi</span>
+      <span class="profile-role">CS Student · Year 3</span>
+    </div>
+    <svg viewBox="0 0 20 20" style="width:16px;height:16px;opacity:.4;flex-shrink:0"><path d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" fill="currentColor"/></svg>
+  </div>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="main-content">
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <button class="menu-toggle" onclick="toggleSidebar()">
+      <svg viewBox="0 0 20 20" width="20" height="20"><path d="M3 5h14v1H3V5zm0 4h14v1H3V9zm0 4h14v1H3v-1z" fill="currentColor"/></svg>
+    </button>
+    <div class="search-bar">
+      <svg viewBox="0 0 20 20" width="16" height="16" style="opacity:.5"><path d="M12.9 14.32a8 8 0 111.41-1.41l4.38 4.37-1.41 1.42-4.38-4.38zM8 14A6 6 0 108 2a6 6 0 000 12z" fill="currentColor"/></svg>
+      <input type="text" placeholder="Search courses, lectures, resources…" id="globalSearch" onkeyup="handleSearch(this.value)">
+    </div>
+    <div class="topbar-actions">
+      <button class="icon-btn" onclick="toggleNotifications()">
+        <svg viewBox="0 0 20 20" width="18" height="18"><path d="M10 2a6 6 0 00-6 6v3l-2 2v1h16v-1l-2-2V8a6 6 0 00-6-6zm0 18a2 2 0 002-2H8a2 2 0 002 2z" fill="currentColor"/></svg>
+        <span class="notif-dot"></span>
+      </button>
+      <div class="topbar-avatar">MK</div>
+    </div>
+    <!-- Notification Dropdown -->
+    <div class="notif-dropdown" id="notifDropdown">
+      <div class="notif-header">Notifications</div>
+      <div class="notif-item unread">
+        <div class="notif-icon blue">📋</div>
+        <div><strong>Assignment Due</strong><br><span>Database Systems — 2 days left</span></div>
+      </div>
+      <div class="notif-item unread">
+        <div class="notif-icon green">✅</div>
+        <div><strong>Grade Posted</strong><br><span>Linear Algebra midterm graded</span></div>
+      </div>
+      <div class="notif-item">
+        <div class="notif-icon amber">💬</div>
+        <div><strong>Forum Reply</strong><br><span>Dr. Ndayisaba replied to your question</span></div>
+      </div>
+      <div class="notif-item">
+        <div class="notif-icon purple">📅</div>
+        <div><strong>Class Reminder</strong><br><span>Web Development tomorrow at 9AM</span></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- PAGE CONTAINER -->
+  <div class="page-container">
+
+    <!-- ==================== DASHBOARD ==================== -->
+    <section class="page active" id="page-dashboard">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Muraho, Marie <span class="wave">👋</span></h1>
+          <p class="page-subtitle">You have 3 pending assignments and 2 upcoming lectures today.</p>
+        </div>
+        <div class="semester-badge">Semester 1 · 2024/25</div>
+      </div>
+
+      <!-- Stats Row -->
+      <div class="stats-row">
+        <div class="stat-card" style="--accent:#2563EB">
+          <div class="stat-icon">📚</div>
+          <div class="stat-num">6</div>
+          <div class="stat-label">Enrolled Courses</div>
+          <div class="stat-trend up">+1 this semester</div>
+        </div>
+        <div class="stat-card" style="--accent:#16A34A">
+          <div class="stat-icon">✅</div>
+          <div class="stat-num">78%</div>
+          <div class="stat-label">Assignments Done</div>
+          <div class="stat-trend up">18 of 23 completed</div>
+        </div>
+        <div class="stat-card" style="--accent:#D97706">
+          <div class="stat-icon">⭐</div>
+          <div class="stat-num">3.72</div>
+          <div class="stat-label">Current GPA</div>
+          <div class="stat-trend up">↑ 0.14 from last sem</div>
+        </div>
+        <div class="stat-card" style="--accent:#7C3AED">
+          <div class="stat-icon">🕒</div>
+          <div class="stat-num">42h</div>
+          <div class="stat-label">Study Hours</div>
+          <div class="stat-trend">This month</div>
+        </div>
+      </div>
+
+      <!-- Two column layout -->
+      <div class="dash-grid">
+
+        <!-- Continue Learning -->
+        <div class="dash-card wide">
+          <div class="card-header">
+            <h3>Continue Learning</h3>
+            <a href="#" onclick="navigate('courses')">View all</a>
+          </div>
+          <div class="course-list">
+            <div class="course-item" onclick="openCourseModal('cs301')">
+              <div class="course-thumb" style="background:linear-gradient(135deg,#1e3a8a,#3b82f6)">CS</div>
+              <div class="course-info">
+                <div class="course-name">Database Systems</div>
+                <div class="course-meta">Dr. Nkusi · 12 lectures</div>
+                <div class="progress-bar"><div class="progress-fill" style="width:68%"></div></div>
+                <div class="progress-label">68% complete</div>
+              </div>
+              <div class="course-action">→</div>
+            </div>
+            <div class="course-item" onclick="openCourseModal('math201')">
+              <div class="course-thumb" style="background:linear-gradient(135deg,#064e3b,#10b981)">MA</div>
+              <div class="course-info">
+                <div class="course-name">Linear Algebra</div>
+                <div class="course-meta">Prof. Mukandayisenga · 9 lectures</div>
+                <div class="progress-bar"><div class="progress-fill" style="width:45%"></div></div>
+                <div class="progress-label">45% complete</div>
+              </div>
+              <div class="course-action">→</div>
+            </div>
+            <div class="course-item" onclick="openCourseModal('cs401')">
+              <div class="course-thumb" style="background:linear-gradient(135deg,#4c1d95,#8b5cf6)">WD</div>
+              <div class="course-info">
+                <div class="course-name">Web Development</div>
+                <div class="course-meta">Dr. Habimana · 15 lectures</div>
+                <div class="progress-bar"><div class="progress-fill" style="width:82%"></div></div>
+                <div class="progress-label">82% complete</div>
+              </div>
+              <div class="course-action">→</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Upcoming -->
+        <div class="dash-card">
+          <div class="card-header">
+            <h3>Upcoming</h3>
+            <a href="#" onclick="navigate('calendar')">Calendar</a>
+          </div>
+          <div class="upcoming-list">
+            <div class="upcoming-item">
+              <div class="upcoming-time">
+                <div class="time-day">Mon</div>
+                <div class="time-date">21</div>
+              </div>
+              <div class="upcoming-detail">
+                <div class="upcoming-title">Database Systems Lecture</div>
+                <div class="upcoming-sub">09:00 – 11:00 · Room CB204</div>
+                <span class="badge blue">Lecture</span>
+              </div>
+            </div>
+            <div class="upcoming-item">
+              <div class="upcoming-time">
+                <div class="time-day">Mon</div>
+                <div class="time-date">21</div>
+              </div>
+              <div class="upcoming-detail">
+                <div class="upcoming-title">Linear Algebra Tutorial</div>
+                <div class="upcoming-sub">14:00 – 15:30 · Room MA101</div>
+                <span class="badge green">Tutorial</span>
+              </div>
+            </div>
+            <div class="upcoming-item">
+              <div class="upcoming-time">
+                <div class="time-day">Wed</div>
+                <div class="time-date">23</div>
+              </div>
+              <div class="upcoming-detail">
+                <div class="upcoming-title">Web Dev Assignment Due</div>
+                <div class="upcoming-sub">11:59 PM · Online submission</div>
+                <span class="badge red">Due</span>
+              </div>
+            </div>
+            <div class="upcoming-item">
+              <div class="upcoming-time">
+                <div class="time-day">Thu</div>
+                <div class="time-date">24</div>
+              </div>
+              <div class="upcoming-detail">
+                <div class="upcoming-title">Networks Midterm Exam</div>
+                <div class="upcoming-sub">08:00 – 10:00 · Exam Hall A</div>
+                <span class="badge amber">Exam</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Announcements -->
+        <div class="dash-card">
+          <div class="card-header">
+            <h3>Announcements</h3>
+            <span class="badge-count">3 new</span>
+          </div>
+          <div class="announcement-list">
+            <div class="announcement-item">
+              <div class="ann-dot blue"></div>
+              <div>
+                <div class="ann-title">Registration for Semester 2 Open</div>
+                <div class="ann-meta">Registrar's Office · 2 hours ago</div>
+              </div>
+            </div>
+            <div class="announcement-item">
+              <div class="ann-dot green"></div>
+              <div>
+                <div class="ann-title">New Library Resources Available</div>
+                <div class="ann-meta">Library · 1 day ago</div>
+              </div>
+            </div>
+            <div class="announcement-item">
+              <div class="ann-dot amber"></div>
+              <div>
+                <div class="ann-title">Campus WiFi Maintenance — Sunday</div>
+                <div class="ann-meta">ICT Department · 2 days ago</div>
+              </div>
+            </div>
+            <div class="announcement-item">
+              <div class="ann-dot purple"></div>
+              <div>
+                <div class="ann-title">Student Council Elections Next Week</div>
+                <div class="ann-meta">Student Affairs · 3 days ago</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Weekly Progress -->
+        <div class="dash-card wide">
+          <div class="card-header">
+            <h3>Weekly Activity</h3>
+            <span style="font-size:13px;color:#6b7280">Hours studied per day</span>
+          </div>
+          <div class="bar-chart-wrap">
+            <div class="bar-chart">
+              <div class="bar-col"><div class="bar-fill" style="height:40%"></div><div class="bar-label">Mon</div></div>
+              <div class="bar-col"><div class="bar-fill" style="height:75%"></div><div class="bar-label">Tue</div></div>
+              <div class="bar-col"><div class="bar-fill" style="height:55%"></div><div class="bar-label">Wed</div></div>
+              <div class="bar-col"><div class="bar-fill" style="height:90%"></div><div class="bar-label">Thu</div></div>
+              <div class="bar-col"><div class="bar-fill" style="height:30%"></div><div class="bar-label">Fri</div></div>
+              <div class="bar-col"><div class="bar-fill today" style="height:65%"></div><div class="bar-label today-label">Sat</div></div>
+              <div class="bar-col"><div class="bar-fill" style="height:20%"></div><div class="bar-label">Sun</div></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==================== COURSES PAGE ==================== -->
+    <section class="page" id="page-courses">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">My Courses</h1>
+          <p class="page-subtitle">Semester 1, 2024/25 — 6 enrolled courses</p>
+        </div>
+        <div class="filter-group">
+          <button class="filter-btn active" onclick="filterCourses('all', this)">All</button>
+          <button class="filter-btn" onclick="filterCourses('inprogress', this)">In Progress</button>
+          <button class="filter-btn" onclick="filterCourses('completed', this)">Completed</button>
+        </div>
+      </div>
+
+      <div class="courses-grid" id="coursesGrid">
+        <div class="course-card" data-status="inprogress" onclick="openCourseModal('cs301')">
+          <div class="cc-banner" style="background:linear-gradient(135deg,#1e3a8a,#3b82f6)">
+            <span class="cc-code">CS 301</span>
+          </div>
+          <div class="cc-body">
+            <div class="cc-title">Database Systems</div>
+            <div class="cc-instructor">Dr. Jean-Pierre Nkusi</div>
+            <div class="cc-meta">
+              <span>📖 12 Lectures</span>
+              <span>📝 4 Assignments</span>
+            </div>
+            <div class="progress-bar mt"><div class="progress-fill" style="width:68%"></div></div>
+            <div class="cc-footer">
+              <span class="badge blue">In Progress</span>
+              <span class="cc-pct">68%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="course-card" data-status="inprogress" onclick="openCourseModal('math201')">
+          <div class="cc-banner" style="background:linear-gradient(135deg,#064e3b,#10b981)">
+            <span class="cc-code">MA 201</span>
+          </div>
+          <div class="cc-body">
+            <div class="cc-title">Linear Algebra</div>
+            <div class="cc-instructor">Prof. Clementine Mukandayisenga</div>
+            <div class="cc-meta">
+              <span>📖 9 Lectures</span>
+              <span>📝 3 Assignments</span>
+            </div>
+            <div class="progress-bar mt"><div class="progress-fill" style="width:45%"></div></div>
+            <div class="cc-footer">
+              <span class="badge blue">In Progress</span>
+              <span class="cc-pct">45%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="course-card" data-status="inprogress" onclick="openCourseModal('cs401')">
+          <div class="cc-banner" style="background:linear-gradient(135deg,#4c1d95,#8b5cf6)">
+            <span class="cc-code">CS 401</span>
+          </div>
+          <div class="cc-body">
+            <div class="cc-title">Web Development</div>
+            <div class="cc-instructor">Dr. Patrick Habimana</div>
+            <div class="cc-meta">
+              <span>📖 15 Lectures</span>
+              <span>📝 5 Assignments</span>
+            </div>
+            <div class="progress-bar mt"><div class="progress-fill" style="width:82%"></div></div>
+            <div class="cc-footer">
+              <span class="badge blue">In Progress</span>
+              <span class="cc-pct">82%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="course-card" data-status="inprogress" onclick="openCourseModal('cs350')">
+          <div class="cc-banner" style="background:linear-gradient(135deg,#7c2d12,#f97316)">
+            <span class="cc-code">CS 350</span>
+          </div>
+          <div class="cc-body">
+            <div class="cc-title">Computer Networks</div>
+            <div class="cc-instructor">Prof. Emmanuel Rurangwa</div>
+            <div class="cc-meta">
+              <span>📖 11 Lectures</span>
+              <span>📝 3 Assignments</span>
+            </div>
+            <div class="progress-bar mt"><div class="progress-fill" style="width:35%"></div></div>
+            <div class="cc-footer">
+              <span class="badge blue">In Progress</span>
+              <span class="cc-pct">35%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="course-card" data-status="completed" onclick="openCourseModal('cs200')">
+          <div class="cc-banner" style="background:linear-gradient(135deg,#134e4a,#14b8a6)">
+            <span class="cc-code">CS 200</span>
+          </div>
+          <div class="cc-body">
+            <div class="cc-title">Data Structures & Algorithms</div>
+            <div class="cc-instructor">Dr. Solange Ingabire</div>
+            <div class="cc-meta">
+              <span>📖 14 Lectures</span>
+              <span>📝 6 Assignments</span>
+            </div>
+            <div class="progress-bar mt"><div class="progress-fill" style="width:100%"></div></div>
+            <div class="cc-footer">
+              <span class="badge green">Completed</span>
+              <span class="cc-pct">A</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="course-card" data-status="completed" onclick="openCourseModal('stat101')">
+          <div class="cc-banner" style="background:linear-gradient(135deg,#1e1b4b,#6366f1)">
+            <span class="cc-code">ST 101</span>
+          </div>
+          <div class="cc-body">
+            <div class="cc-title">Probability & Statistics</div>
+            <div class="cc-instructor">Prof. Alphonse Bizimana</div>
+            <div class="cc-meta">
+              <span>📖 10 Lectures</span>
+              <span>📝 4 Assignments</span>
+            </div>
+            <div class="progress-bar mt"><div class="progress-fill" style="width:100%"></div></div>
+            <div class="cc-footer">
+              <span class="badge green">Completed</span>
+              <span class="cc-pct">B+</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== LECTURES PAGE ==================== -->
+    <section class="page" id="page-lectures">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Lectures</h1>
+          <p class="page-subtitle">Browse and watch recorded lecture videos</p>
+        </div>
+      </div>
+
+      <div class="lecture-layout">
+        <div class="lecture-list-panel">
+          <div class="lecture-search">
+            <input type="text" placeholder="Filter lectures…" oninput="filterLectures(this.value)">
+          </div>
+          <div class="lecture-course-group" id="lectureList">
+            <div class="lec-group-title">Database Systems</div>
+            <div class="lec-item active" onclick="selectLecture(this, 'Lecture 1: Introduction to Databases', 'Dr. Jean-Pierre Nkusi', '1:12:34', 'cs301')">
+              <div class="lec-num">01</div>
+              <div class="lec-info">
+                <div class="lec-title">Introduction to Databases</div>
+                <div class="lec-duration">1h 12m · Watched</div>
+              </div>
+              <svg viewBox="0 0 20 20" width="14" class="lec-check"><path d="M16.7 5.3l-8.4 8.4-4-4 1.4-1.4 2.6 2.6 7-7z" fill="#16a34a"/></svg>
+            </div>
+            <div class="lec-item" onclick="selectLecture(this, 'Lecture 2: Relational Model', 'Dr. Jean-Pierre Nkusi', '58:22', 'cs301')">
+              <div class="lec-num">02</div>
+              <div class="lec-info">
+                <div class="lec-title">The Relational Model</div>
+                <div class="lec-duration">58m</div>
+              </div>
+            </div>
+            <div class="lec-item" onclick="selectLecture(this, 'Lecture 3: SQL Fundamentals', 'Dr. Jean-Pierre Nkusi', '1:05:10', 'cs301')">
+              <div class="lec-num">03</div>
+              <div class="lec-info">
+                <div class="lec-title">SQL Fundamentals</div>
+                <div class="lec-duration">1h 05m</div>
+              </div>
+            </div>
+
+            <div class="lec-group-title">Web Development</div>
+            <div class="lec-item" onclick="selectLecture(this, 'Lecture 1: HTML & CSS Foundations', 'Dr. Patrick Habimana', '1:20:00', 'cs401')">
+              <div class="lec-num">01</div>
+              <div class="lec-info">
+                <div class="lec-title">HTML & CSS Foundations</div>
+                <div class="lec-duration">1h 20m · Watched</div>
+              </div>
+              <svg viewBox="0 0 20 20" width="14" class="lec-check"><path d="M16.7 5.3l-8.4 8.4-4-4 1.4-1.4 2.6 2.6 7-7z" fill="#16a34a"/></svg>
+            </div>
+            <div class="lec-item" onclick="selectLecture(this, 'Lecture 2: JavaScript Essentials', 'Dr. Patrick Habimana', '1:35:00', 'cs401')">
+              <div class="lec-num">02</div>
+              <div class="lec-info">
+                <div class="lec-title">JavaScript Essentials</div>
+                <div class="lec-duration">1h 35m · Watched</div>
+              </div>
+              <svg viewBox="0 0 20 20" width="14" class="lec-check"><path d="M16.7 5.3l-8.4 8.4-4-4 1.4-1.4 2.6 2.6 7-7z" fill="#16a34a"/></svg>
+            </div>
+            <div class="lec-item" onclick="selectLecture(this, 'Lecture 3: React Fundamentals', 'Dr. Patrick Habimana', '1:48:00', 'cs401')">
+              <div class="lec-num">03</div>
+              <div class="lec-info">
+                <div class="lec-title">React Fundamentals</div>
+                <div class="lec-duration">1h 48m</div>
+              </div>
+            </div>
+
+            <div class="lec-group-title">Linear Algebra</div>
+            <div class="lec-item" onclick="selectLecture(this, 'Lecture 1: Vectors & Matrices', 'Prof. Clementine Mukandayisenga', '1:10:00', 'math201')">
+              <div class="lec-num">01</div>
+              <div class="lec-info">
+                <div class="lec-title">Vectors & Matrices</div>
+                <div class="lec-duration">1h 10m · Watched</div>
+              </div>
+              <svg viewBox="0 0 20 20" width="14" class="lec-check"><path d="M16.7 5.3l-8.4 8.4-4-4 1.4-1.4 2.6 2.6 7-7z" fill="#16a34a"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Video Player -->
+        <div class="lecture-player-panel">
+          <div class="video-player" id="videoPlayer">
+            <div class="video-placeholder">
+              <div class="play-btn-big" onclick="togglePlay()">▶</div>
+              <div class="video-title-overlay" id="currentLecTitle">Introduction to Databases</div>
+            </div>
+            <div class="video-controls">
+              <button class="ctrl-btn" onclick="togglePlay()" id="playBtn">⏸</button>
+              <div class="timeline-wrap">
+                <span class="time-cur" id="timeCur">0:00</span>
+                <div class="timeline" onclick="seekVideo(event, this)">
+                  <div class="timeline-fill" id="timelineFill" style="width:0%"></div>
+                </div>
+                <span class="time-total">1:12:34</span>
+              </div>
+              <select class="speed-select" onchange="changeSpeed(this.value)">
+                <option>0.75×</option>
+                <option selected>1×</option>
+                <option>1.25×</option>
+                <option>1.5×</option>
+                <option>2×</option>
+              </select>
+              <button class="ctrl-btn">⛶</button>
+            </div>
+          </div>
+
+          <div class="lecture-details">
+            <div class="ld-title" id="ldTitle">Introduction to Databases</div>
+            <div class="ld-meta">
+              <span id="ldInstructor">Dr. Jean-Pierre Nkusi</span>
+              <span>·</span>
+              <span id="ldDuration">1h 12m</span>
+              <span>·</span>
+              <span>CS 301 — Database Systems</span>
+            </div>
+            <div class="ld-tabs">
+              <button class="ld-tab active" onclick="switchLdTab(this,'overview')">Overview</button>
+              <button class="ld-tab" onclick="switchLdTab(this,'notes')">Notes</button>
+              <button class="ld-tab" onclick="switchLdTab(this,'resources')">Resources</button>
+            </div>
+            <div class="ld-tab-content" id="ld-overview">
+              <p>This lecture introduces the core concepts of database systems including the DBMS architecture, data models, and the history of relational databases. Students will learn the fundamental terminologies used throughout the course.</p>
+              <div class="ld-topics">
+                <div class="ld-topic">📌 DBMS Architecture overview</div>
+                <div class="ld-topic">📌 Types of data models</div>
+                <div class="ld-topic">📌 Relational vs NoSQL</div>
+                <div class="ld-topic">📌 Introduction to ER diagrams</div>
+              </div>
+            </div>
+            <div class="ld-tab-content hidden" id="ld-notes">
+              <textarea placeholder="Take personal notes here — they are saved automatically…" style="width:100%;min-height:120px;padding:12px;border:1px solid #e5e7eb;border-radius:8px;font-family:inherit;font-size:14px;resize:vertical;"></textarea>
+            </div>
+            <div class="ld-tab-content hidden" id="ld-resources">
+              <div class="res-file"><span>📄</span> Lecture 1 Slides.pdf</div>
+              <div class="res-file"><span>📄</span> Reading: Ramakrishnan Ch.1-2.pdf</div>
+              <div class="res-file"><span>🔗</span> PostgreSQL Official Docs</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== ASSIGNMENTS PAGE ==================== -->
+    <section class="page" id="page-assignments">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Assignments</h1>
+          <p class="page-subtitle">Track submissions and deadlines</p>
+        </div>
+        <div class="filter-group">
+          <button class="filter-btn active" onclick="filterAssign('all',this)">All</button>
+          <button class="filter-btn" onclick="filterAssign('pending',this)">Pending</button>
+          <button class="filter-btn" onclick="filterAssign('submitted',this)">Submitted</button>
+          <button class="filter-btn" onclick="filterAssign('graded',this)">Graded</button>
+        </div>
+      </div>
+
+      <div class="assign-table-wrap">
+        <table class="assign-table">
+          <thead>
+            <tr>
+              <th>Assignment</th>
+              <th>Course</th>
+              <th>Due Date</th>
+              <th>Status</th>
+              <th>Grade</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="assignBody">
+            <tr data-status="pending">
+              <td><div class="assign-name">ER Diagram Design Project</div><div class="assign-desc">Design a full ER diagram for a hospital system</div></td>
+              <td><span class="course-pill blue">CS 301</span></td>
+              <td><span class="due-urgent">Apr 23, 2025</span></td>
+              <td><span class="status-badge pending">Pending</span></td>
+              <td>—</td>
+              <td><button class="btn-submit" onclick="openSubmitModal()">Submit</button></td>
+            </tr>
+            <tr data-status="pending">
+              <td><div class="assign-name">JavaScript DOM Manipulation</div><div class="assign-desc">Build an interactive to-do list app</div></td>
+              <td><span class="course-pill purple">CS 401</span></td>
+              <td><span class="due-urgent">Apr 23, 2025</span></td>
+              <td><span class="status-badge pending">Pending</span></td>
+              <td>—</td>
+              <td><button class="btn-submit" onclick="openSubmitModal()">Submit</button></td>
+            </tr>
+            <tr data-status="pending">
+              <td><div class="assign-name">Matrix Operations Problem Set</div><div class="assign-desc">Solve 15 matrix operation problems</div></td>
+              <td><span class="course-pill green">MA 201</span></td>
+              <td>Apr 28, 2025</td>
+              <td><span class="status-badge pending">Pending</span></td>
+              <td>—</td>
+              <td><button class="btn-submit" onclick="openSubmitModal()">Submit</button></td>
+            </tr>
+            <tr data-status="submitted">
+              <td><div class="assign-name">OSI Model Report</div><div class="assign-desc">Write a 2000-word report on the OSI model layers</div></td>
+              <td><span class="course-pill orange">CS 350</span></td>
+              <td>Apr 18, 2025</td>
+              <td><span class="status-badge submitted">Submitted</span></td>
+              <td>—</td>
+              <td><button class="btn-view">View</button></td>
+            </tr>
+            <tr data-status="graded">
+              <td><div class="assign-name">SQL Queries Lab</div><div class="assign-desc">Write 20 SQL queries for given schema</div></td>
+              <td><span class="course-pill blue">CS 301</span></td>
+              <td>Apr 10, 2025</td>
+              <td><span class="status-badge graded">Graded</span></td>
+              <td><span class="grade-chip a">88/100</span></td>
+              <td><button class="btn-view">View</button></td>
+            </tr>
+            <tr data-status="graded">
+              <td><div class="assign-name">React Component Library</div><div class="assign-desc">Build a reusable UI component library</div></td>
+              <td><span class="course-pill purple">CS 401</span></td>
+              <td>Mar 30, 2025</td>
+              <td><span class="status-badge graded">Graded</span></td>
+              <td><span class="grade-chip a">95/100</span></td>
+              <td><button class="btn-view">View</button></td>
+            </tr>
+            <tr data-status="graded">
+              <td><div class="assign-name">Eigenvalues Problem Set</div><div class="assign-desc">Calculate eigenvalues and eigenvectors</div></td>
+              <td><span class="course-pill green">MA 201</span></td>
+              <td>Mar 25, 2025</td>
+              <td><span class="status-badge graded">Graded</span></td>
+              <td><span class="grade-chip b">76/100</span></td>
+              <td><button class="btn-view">View</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ==================== GRADES PAGE ==================== -->
+    <section class="page" id="page-grades">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Grades & Transcript</h1>
+          <p class="page-subtitle">Academic performance overview · Semester 1, 2024/25</p>
+        </div>
+        <button class="btn-primary" onclick="alert('Transcript downloaded!')">⬇ Download Transcript</button>
+      </div>
+
+      <div class="grades-layout">
+        <div class="gpa-card">
+          <div class="gpa-number">3.72</div>
+          <div class="gpa-label">Cumulative GPA</div>
+          <div class="gpa-scale">out of 4.0</div>
+          <div class="gpa-bar">
+            <div class="gpa-fill" style="width:93%"></div>
+          </div>
+          <div class="gpa-credits">87 credits completed</div>
+        </div>
+
+        <div class="grades-table-wrap">
+          <table class="grades-table">
+            <thead>
+              <tr><th>Course</th><th>Credits</th><th>Assignment</th><th>Midterm</th><th>Final</th><th>Grade</th><th>Points</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><div class="course-name-cell">Database Systems</div><div class="course-code-cell">CS 301</div></td>
+                <td>4</td>
+                <td>88%</td>
+                <td>82%</td>
+                <td>—</td>
+                <td><span class="letter-grade a">A</span></td>
+                <td>4.0</td>
+              </tr>
+              <tr>
+                <td><div class="course-name-cell">Web Development</div><div class="course-code-cell">CS 401</div></td>
+                <td>4</td>
+                <td>95%</td>
+                <td>91%</td>
+                <td>—</td>
+                <td><span class="letter-grade a">A+</span></td>
+                <td>4.0</td>
+              </tr>
+              <tr>
+                <td><div class="course-name-cell">Linear Algebra</div><div class="course-code-cell">MA 201</div></td>
+                <td>3</td>
+                <td>76%</td>
+                <td>74%</td>
+                <td>—</td>
+                <td><span class="letter-grade b">B+</span></td>
+                <td>3.3</td>
+              </tr>
+              <tr>
+                <td><div class="course-name-cell">Computer Networks</div><div class="course-code-cell">CS 350</div></td>
+                <td>3</td>
+                <td>70%</td>
+                <td>68%</td>
+                <td>—</td>
+                <td><span class="letter-grade b">B</span></td>
+                <td>3.0</td>
+              </tr>
+              <tr class="completed-row">
+                <td><div class="course-name-cell">Data Structures & Algorithms</div><div class="course-code-cell">CS 200</div></td>
+                <td>4</td>
+                <td>92%</td>
+                <td>88%</td>
+                <td>90%</td>
+                <td><span class="letter-grade a">A</span></td>
+                <td>4.0</td>
+              </tr>
+              <tr class="completed-row">
+                <td><div class="course-name-cell">Probability & Statistics</div><div class="course-code-cell">ST 101</div></td>
+                <td>3</td>
+                <td>80%</td>
+                <td>77%</td>
+                <td>79%</td>
+                <td><span class="letter-grade b">B+</span></td>
+                <td>3.3</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== CALENDAR PAGE ==================== -->
+    <section class="page" id="page-calendar">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Academic Calendar</h1>
+          <p class="page-subtitle">April 2025</p>
+        </div>
+        <div class="cal-nav">
+          <button class="cal-arrow" onclick="changeMonth(-1)">‹</button>
+          <span class="cal-month-label" id="calMonthLabel">April 2025</span>
+          <button class="cal-arrow" onclick="changeMonth(1)">›</button>
+        </div>
+      </div>
+      <div class="cal-wrap">
+        <div class="cal-legend">
+          <span class="leg-item"><span class="leg-dot blue"></span>Lecture</span>
+          <span class="leg-item"><span class="leg-dot red"></span>Due Date</span>
+          <span class="leg-item"><span class="leg-dot amber"></span>Exam</span>
+          <span class="leg-item"><span class="leg-dot green"></span>Tutorial</span>
+        </div>
+        <div class="calendar-grid" id="calendarGrid"></div>
+      </div>
+    </section>
+
+    <!-- ==================== FORUM PAGE ==================== -->
+    <section class="page" id="page-forum">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Discussion Forum</h1>
+          <p class="page-subtitle">Ask questions, share ideas, connect with peers</p>
+        </div>
+        <button class="btn-primary" onclick="openNewPost()">+ New Post</button>
+      </div>
+      <div class="forum-layout">
+        <div class="forum-sidebar">
+          <div class="forum-section-title">Courses</div>
+          <div class="forum-cat active" onclick="filterForum('all',this)">📚 All Discussions</div>
+          <div class="forum-cat" onclick="filterForum('cs301',this)">🗄 Database Systems</div>
+          <div class="forum-cat" onclick="filterForum('cs401',this)">🌐 Web Development</div>
+          <div class="forum-cat" onclick="filterForum('math201',this)">📐 Linear Algebra</div>
+          <div class="forum-cat" onclick="filterForum('cs350',this)">🔌 Computer Networks</div>
+          <div class="forum-section-title" style="margin-top:16px">Tags</div>
+          <div class="forum-tags">
+            <span class="ftag">question</span>
+            <span class="ftag">help</span>
+            <span class="ftag">resources</span>
+            <span class="ftag">exam-prep</span>
+            <span class="ftag">group-study</span>
+          </div>
+        </div>
+        <div class="forum-posts" id="forumPosts">
+          <div class="forum-post" data-course="cs301">
+            <div class="fp-vote">
+              <button onclick="vote(this,1)">▲</button>
+              <span class="fp-score">12</span>
+              <button onclick="vote(this,-1)">▼</button>
+            </div>
+            <div class="fp-content">
+              <div class="fp-header">
+                <span class="fp-tag question">question</span>
+                <span class="fp-course-tag">CS 301</span>
+              </div>
+              <div class="fp-title" onclick="openThread()">Why do we use normalization in relational databases?</div>
+              <div class="fp-excerpt">I understand the basics but I'm confused about when to stop normalizing. Is 3NF always enough?</div>
+              <div class="fp-meta">
+                <div class="fp-author-wrap">
+                  <div class="fp-avatar">JN</div>
+                  Jean-Baptiste Nsanzimana
+                </div>
+                <span>· 2 hours ago · <strong>8 replies</strong></span>
+              </div>
+            </div>
+          </div>
+          <div class="forum-post" data-course="cs401">
+            <div class="fp-vote">
+              <button onclick="vote(this,1)">▲</button>
+              <span class="fp-score">7</span>
+              <button onclick="vote(this,-1)">▼</button>
+            </div>
+            <div class="fp-content">
+              <div class="fp-header">
+                <span class="fp-tag help">help</span>
+                <span class="fp-course-tag">CS 401</span>
+              </div>
+              <div class="fp-title" onclick="openThread()">React useEffect dependency array — when to include what?</div>
+              <div class="fp-excerpt">My component keeps re-rendering in an infinite loop. I think it's because of the dependency array in useEffect…</div>
+              <div class="fp-meta">
+                <div class="fp-author-wrap">
+                  <div class="fp-avatar">AM</div>
+                  Aline Mukamurenzi
+                </div>
+                <span>· 5 hours ago · <strong>15 replies</strong> · ✅ Answered</span>
+              </div>
+            </div>
+          </div>
+          <div class="forum-post" data-course="math201">
+            <div class="fp-vote">
+              <button onclick="vote(this,1)">▲</button>
+              <span class="fp-score">4</span>
+              <button onclick="vote(this,-1)">▼</button>
+            </div>
+            <div class="fp-content">
+              <div class="fp-header">
+                <span class="fp-tag resources">resources</span>
+                <span class="fp-course-tag">MA 201</span>
+              </div>
+              <div class="fp-title" onclick="openThread()">Good YouTube channels for Linear Algebra?</div>
+              <div class="fp-excerpt">3Blue1Brown's Essence of Linear Algebra series is amazing. Anyone have other recommendations?</div>
+              <div class="fp-meta">
+                <div class="fp-author-wrap">
+                  <div class="fp-avatar">BN</div>
+                  Bosco Nzeyimana
+                </div>
+                <span>· Yesterday · <strong>6 replies</strong></span>
+              </div>
+            </div>
+          </div>
+          <div class="forum-post" data-course="cs350">
+            <div class="fp-vote">
+              <button onclick="vote(this,1)">▲</button>
+              <span class="fp-score">9</span>
+              <button onclick="vote(this,-1)">▼</button>
+            </div>
+            <div class="fp-content">
+              <div class="fp-header">
+                <span class="fp-tag exam-prep">exam-prep</span>
+                <span class="fp-course-tag">CS 350</span>
+              </div>
+              <div class="fp-title" onclick="openThread()">Study group for Networks midterm — who's in?</div>
+              <div class="fp-excerpt">Planning a study session this Saturday at the main library. Covering TCP/IP, routing protocols and subnetting.</div>
+              <div class="fp-meta">
+                <div class="fp-author-wrap">
+                  <div class="fp-avatar">FM</div>
+                  Faustin Mugisha
+                </div>
+                <span>· Yesterday · <strong>22 replies</strong></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== RESOURCES PAGE ==================== -->
+    <section class="page" id="page-resources">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Learning Resources</h1>
+          <p class="page-subtitle">Lecture slides, textbooks, and supplementary materials</p>
+        </div>
+        <div class="search-bar" style="max-width:300px">
+          <svg viewBox="0 0 20 20" width="14" height="14" style="opacity:.5"><path d="M12.9 14.32a8 8 0 111.41-1.41l4.38 4.37-1.41 1.42-4.38-4.38zM8 14A6 6 0 108 2a6 6 0 000 12z" fill="currentColor"/></svg>
+          <input type="text" placeholder="Search resources…">
+        </div>
+      </div>
+
+      <div class="resources-grid">
+        <div class="resource-category">
+          <div class="rc-header" style="background:linear-gradient(135deg,#1e3a8a,#3b82f6)">
+            <div class="rc-code">CS 301</div>
+            <div class="rc-name">Database Systems</div>
+          </div>
+          <div class="rc-files">
+            <div class="rc-file" onclick="downloadFile('Week 1 Slides.pdf')"><span class="rf-icon pdf">PDF</span><div class="rf-info"><div class="rf-name">Week 1: Intro to Databases</div><div class="rf-size">2.4 MB</div></div></div>
+            <div class="rc-file" onclick="downloadFile('Week 2 Slides.pdf')"><span class="rf-icon pdf">PDF</span><div class="rf-info"><div class="rf-name">Week 2: Relational Model</div><div class="rf-size">1.8 MB</div></div></div>
+            <div class="rc-file" onclick="downloadFile('SQL Lab Guide.pdf')"><span class="rf-icon pdf">PDF</span><div class="rf-info"><div class="rf-name">SQL Lab Guide</div><div class="rf-size">0.9 MB</div></div></div>
+            <div class="rc-file" onclick="downloadFile('Textbook Ramakrishnan.pdf')"><span class="rf-icon book">BOOK</span><div class="rf-info"><div class="rf-name">Database Management Systems — Ramakrishnan</div><div class="rf-size">32 MB</div></div></div>
+          </div>
+        </div>
+
+        <div class="resource-category">
+          <div class="rc-header" style="background:linear-gradient(135deg,#4c1d95,#8b5cf6)">
+            <div class="rc-code">CS 401</div>
+            <div class="rc-name">Web Development</div>
+          </div>
+          <div class="rc-files">
+            <div class="rc-file" onclick="downloadFile('HTML CSS Guide.pdf')"><span class="rf-icon pdf">PDF</span><div class="rf-info"><div class="rf-name">HTML & CSS Complete Guide</div><div class="rf-size">3.1 MB</div></div></div>
+            <div class="rc-file" onclick="downloadFile('JS Notes.pdf')"><span class="rf-icon pdf">PDF</span><div class="rf-info"><div class="rf-name">JavaScript Notes</div><div class="rf-size">1.5 MB</div></div></div>
+            <div class="rc-file" onclick="downloadFile('React Docs.zip')"><span class="rf-icon zip">ZIP</span><div class="rf-info"><div class="rf-name">React Project Starter</div><div class="rf-size">4.7 MB</div></div></div>
+          </div>
+        </div>
+
+        <div class="resource-category">
+          <div class="rc-header" style="background:linear-gradient(135deg,#064e3b,#10b981)">
+            <div class="rc-code">MA 201</div>
+            <div class="rc-name">Linear Algebra</div>
+          </div>
+          <div class="rc-files">
+            <div class="rc-file" onclick="downloadFile('Vectors Matrices.pdf')"><span class="rf-icon pdf">PDF</span><div class="rf-info"><div class="rf-name">Vectors & Matrices — Lecture Notes</div><div class="rf-size">1.2 MB</div></div></div>
+            <div class="rc-file" onclick="downloadFile('Problem Sets.pdf')"><span class="rf-icon pdf">PDF</span><div class="rf-info"><div class="rf-name">Problem Sets 1–5</div><div class="rf-size">0.7 MB</div></div></div>
+            <div class="rc-file" onclick="downloadFile('Gilbert Strang.pdf')"><span class="rf-icon book">BOOK</span><div class="rf-info"><div class="rf-name">Introduction to Linear Algebra — Strang</div><div class="rf-size">28 MB</div></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- end page-container -->
+</main>
+
+<!-- ==================== MODALS ==================== -->
+
+<!-- Course Detail Modal -->
+<div class="modal-overlay" id="courseModal" onclick="closeModal('courseModal')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeModal('courseModal')">✕</button>
+    <div class="modal-banner" id="modalBanner" style="background:linear-gradient(135deg,#1e3a8a,#3b82f6)">
+      <div class="modal-code" id="modalCode">CS 301</div>
+      <div class="modal-title" id="modalTitle">Database Systems</div>
+      <div class="modal-instructor" id="modalInstructor">Dr. Jean-Pierre Nkusi</div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-stats">
+        <div class="ms-item"><div class="ms-num">12</div><div class="ms-label">Lectures</div></div>
+        <div class="ms-item"><div class="ms-num">4</div><div class="ms-label">Assignments</div></div>
+        <div class="ms-item"><div class="ms-num">68%</div><div class="ms-label">Progress</div></div>
+        <div class="ms-item"><div class="ms-num">4</div><div class="ms-label">Credits</div></div>
+      </div>
+      <p style="color:#6b7280;font-size:14px;line-height:1.6;">This course covers the fundamental concepts of database systems including relational theory, SQL, normalization, transactions, and database design. Students will build real database applications by the end of the course.</p>
+      <div style="display:flex;gap:12px;margin-top:16px">
+        <button class="btn-primary" onclick="navigate('lectures');closeModal('courseModal')">Go to Lectures</button>
+        <button class="btn-secondary" onclick="navigate('assignments');closeModal('courseModal')">Assignments</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Assignment Submit Modal -->
+<div class="modal-overlay" id="submitModal" onclick="closeModal('submitModal')">
+  <div class="modal" onclick="event.stopPropagation()" style="max-width:480px">
+    <button class="modal-close" onclick="closeModal('submitModal')">✕</button>
+    <div style="padding:28px">
+      <h2 style="margin:0 0 4px;font-size:20px">Submit Assignment</h2>
+      <p style="margin:0 0 24px;color:#6b7280;font-size:14px">ER Diagram Design Project — CS 301</p>
+      <div class="upload-zone" id="uploadZone" ondragover="event.preventDefault()" ondrop="handleDrop(event)">
+        <div class="uz-icon">📂</div>
+        <div class="uz-text">Drag & drop files here or <label for="fileInput" style="color:#2563eb;cursor:pointer">browse</label></div>
+        <div class="uz-sub">PDF, ZIP, DOCX up to 50 MB</div>
+        <input type="file" id="fileInput" style="display:none" onchange="handleFileSelect(this)">
+      </div>
+      <div id="filePreview" style="display:none;margin-top:12px;padding:12px;background:#f9fafb;border-radius:8px;font-size:14px"></div>
+      <textarea placeholder="Add a note for your instructor (optional)…" style="width:100%;margin-top:16px;padding:12px;border:1px solid #e5e7eb;border-radius:8px;font-family:inherit;font-size:14px;height:80px;resize:vertical;box-sizing:border-box;"></textarea>
+      <button class="btn-primary" style="width:100%;margin-top:16px" onclick="submitAssignment()">Submit Assignment</button>
+    </div>
+  </div>
+</div>
+
+<!-- New Forum Post Modal -->
+<div class="modal-overlay" id="newPostModal" onclick="closeModal('newPostModal')">
+  <div class="modal" onclick="event.stopPropagation()" style="max-width:500px">
+    <button class="modal-close" onclick="closeModal('newPostModal')">✕</button>
+    <div style="padding:28px">
+      <h2 style="margin:0 0 20px;font-size:20px">New Discussion Post</h2>
+      <select style="width:100%;padding:10px;border:1px solid #e5e7eb;border-radius:8px;font-family:inherit;margin-bottom:12px">
+        <option>Select Course…</option>
+        <option>CS 301 — Database Systems</option>
+        <option>CS 401 — Web Development</option>
+        <option>MA 201 — Linear Algebra</option>
+        <option>CS 350 — Computer Networks</option>
+      </select>
+      <input type="text" placeholder="Post title…" style="width:100%;padding:10px 12px;border:1px solid #e5e7eb;border-radius:8px;font-family:inherit;font-size:14px;margin-bottom:12px;box-sizing:border-box;">
+      <textarea placeholder="Describe your question or share your idea…" style="width:100%;padding:12px;border:1px solid #e5e7eb;border-radius:8px;font-family:inherit;font-size:14px;height:120px;resize:vertical;box-sizing:border-box;margin-bottom:12px;"></textarea>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">
+        <span class="ftag" style="cursor:pointer" onclick="toggleTag(this)">question</span>
+        <span class="ftag" style="cursor:pointer" onclick="toggleTag(this)">help</span>
+        <span class="ftag" style="cursor:pointer" onclick="toggleTag(this)">resources</span>
+        <span class="ftag" style="cursor:pointer" onclick="toggleTag(this)">exam-prep</span>
+      </div>
+      <button class="btn-primary" style="width:100%" onclick="postForumPost()">Post Discussion</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Notification -->
+<div class="toast" id="toast"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
