@@ -1,0 +1,124 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default-deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // --- Helpers ---
+    function isSignedIn() { return request.auth != null; }
+    function isOwner(userId) { return isSignedIn() && request.auth.uid == userId; }
+    function isEmailVerified() { return isSignedIn() && request.auth.token.email_verified == true; }
+    function isValidId(id) { return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$'); }
+    function incoming() { return request.resource.data; }
+    function existing() { return resource.data; }
+    
+    // Safer role lookup (handles non-existent docs)
+    function getUserData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+    function isLecturer() { 
+      return isSignedIn() && exists(/databases/$(database)/documents/users/$(request.auth.uid)) 
+        && getUserData().role == 'lecturer'; 
+    }
+    function isStudent() { 
+      return isSignedIn() && exists(/databases/$(database)/documents/users/$(request.auth.uid)) 
+        && getUserData().role == 'student'; 
+    }
+    function isAdmin() { 
+      return isSignedIn() && exists(/databases/$(database)/documents/users/$(request.auth.uid)) 
+        && getUserData().role == 'admin'; 
+    }
+
+    // --- User Profile ---
+    match /users/{userId} {
+      allow get: if isSignedIn();
+      allow list: if isAdmin();
+      allow create: if isOwner(userId) 
+        && incoming().uid == request.auth.uid
+        && incoming().role in ['student', 'lecturer']
+        && incoming().createdAt == request.time;
+      allow update: if isOwner(userId)
+        && incoming().diff(existing()).affectedKeys().hasOnly(['displayName', 'photoURL'])
+        || isAdmin();
+    }
+
+    // --- Courses ---
+    match /courses/{courseId} {
+      function isValidCourse(data) {
+        return data.title is string && data.title.size() > 0 && data.title.size() <= 100
+          && data.code is string && data.code.size() > 0 && data.code.size() <= 20;
+      }
+      
+      // Split read for performance and list security
+      allow get: if true;
+      allow list: if true; 
+      
+      allow create: if isLecturer() && isEmailVerified() 
+        && incoming().lecturerId == request.auth.uid
+        && isValidCourse(incoming()) && isValidId(courseId);
+      allow update: if (isLecturer() && isEmailVerified() 
+        && existing().lecturerId == request.auth.uid 
+        && incoming().lecturerId == existing().lecturerId
+        && isValidCourse(incoming()))
+        || isAdmin();
+      allow delete: if isAdmin();
+
+      // Subcollections (Derived access)
+      match /modules/{moduleId} {
+        allow read: if true;
+        allow write: if (isLecturer() && get(/databases/$(database)/documents/courses/$(courseId)).data.lecturerId == request.auth.uid) || isAdmin();
+
+        match /lessons/{lessonId} {
+          allow read: if isSignedIn();
+          allow write: if (isLecturer() && get(/databases/$(database)/documents/courses/$(courseId)).data.lecturerId == request.auth.uid) || isAdmin();
+        }
+      }
+
+      match /assessments/{assessmentId} {
+        allow read: if isSignedIn();
+        allow write: if (isLecturer() && get(/databases/$(database)/documents/courses/$(courseId)).data.lecturerId == request.auth.uid) || isAdmin();
+      }
+    }
+
+    // --- Submissions ---
+    match /submissions/{submissionId} {
+      // Direct field check for list security (Pillar 8)
+      allow get: if isOwner(existing().userId) 
+        || (isSignedIn() && get(/databases/$(database)/documents/courses/$(existing().courseId)).data.lecturerId == request.auth.uid) 
+        || isAdmin();
+      allow list: if isSignedIn() && (resource.data.userId == request.auth.uid || resource.data.lecturerId == request.auth.uid || isAdmin());
+
+      allow create: if isStudent() && isEmailVerified()
+        && incoming().userId == request.auth.uid
+        && exists(/databases/$(database)/documents/courses/$(incoming().courseId))
+        && incoming().submittedAt == request.time;
+      allow update: if isEmailVerified() && (
+        (isLecturer() && existing().lecturerId == request.auth.uid 
+          && incoming().diff(existing()).affectedKeys().hasOnly(['score', 'feedback', 'gradedAt'])
+          && incoming().gradedAt == request.time)
+        || isAdmin()
+      );
+    }
+
+    // --- Enrollments ---
+    match /enrollments/{enrollmentId} {
+      // Direct field check for list security (Pillar 8)
+      allow get: if resource.data.studentId == request.auth.uid 
+        || (isSignedIn() && get(/databases/$(database)/documents/courses/$(resource.data.courseId)).data.lecturerId == request.auth.uid)
+        || isAdmin();
+      allow list: if isSignedIn() && (resource.data.studentId == request.auth.uid || resource.data.lecturerId == request.auth.uid || isAdmin());
+      
+      allow create: if isStudent() && isEmailVerified()
+        && incoming().studentId == request.auth.uid
+        && exists(/databases/$(database)/documents/courses/$(incoming().courseId))
+        && incoming().enrolledAt == request.time;
+      allow update: if isEmailVerified() && (
+        (existing().studentId == request.auth.uid && incoming().diff(existing()).affectedKeys().hasOnly(['progress', 'completed', 'lastAccessedAt']))
+        || isAdmin()
+      );
+      allow delete: if isAdmin();
+    }
+  }
+}
